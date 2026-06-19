@@ -4,7 +4,7 @@ pandas
 #Face Recognition
 scikit-learn
 dlib-bin
-# python -m pip install dlib-19.24.1-cp311-cp311-win_amd64.whl
+python -m pip install dlib-19.24.1-cp311-cp311-win_amd64.whl
 git+https://github.com/ageitgey/face_recognition_models
 setuptools<70.0.0
 
