@@ -20,7 +20,9 @@ def load_dlib_models():
 
 def get_face_embeddings(image_np):
     detector,sp,facerec=load_dlib_models()
-    faces=detector(image_np,1)
+    faces=detector(image_np,0)
+
+    print("Faces found =", len(faces))
 
     encodings=[]
 
@@ -52,7 +54,7 @@ def get_trained_model():
         clf.fit(X,y)
     except ValueError:
         pass
-    return {'clf':clf , 'X':x, 'y':y}
+    return {'clf':clf , 'X':X, 'y':y}
 
 def train_classifier():
     st.cache_resource.clear()
@@ -77,7 +79,7 @@ def predict_attendance(class_image_np):
 
     for encoding in encodings:
         if len(all_students)>=2:
-            predicted_id= int(clf.predict(encoding[0]))
+            predicted_id= int(clf.predict([encoding])[0])
         else:
             predicted_id=int(all_students[0])
 
@@ -88,7 +90,7 @@ def predict_attendance(class_image_np):
         
         if best_match_score<=resemblance_threshold:
             detected_student[predicted_id]=True
-    return detected_student,all_students,len(encoding)
+    return detected_student,all_students,len(encodings)
 
 
 
