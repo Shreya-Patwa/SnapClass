@@ -26,7 +26,7 @@ def teacher_dashboard():
             del st.session_state.teacher_data
             st.rerun()
             
-    st.space
+    st.space()
 
     if "current_teacher_tab" not in st.session_state:
         st.session_state.current_teacher_tab='take_attendance'
@@ -34,32 +34,52 @@ def teacher_dashboard():
     tab1,tab2,tab3 =st.columns(3)
 
     with tab1:
-        if st.button('Take Attendance',width='stretch',icon =':material/ar_on_you:'):
+        type1="primary" if st.session_state.current_teacher_tab=='take_attendance' else "tertiary"
+        if st.button('Take Attendance',type=type1,width='stretch',icon =':material/ar_on_you:'):
             st.session_state.current_teacher_tab='take_attendance'
             st.rerun()
 
     with tab2:
-        if st.button('Manage Subjects',width='stretch',icon =':material/book_ribbon:'):
+        type2="primary" if st.session_state.current_teacher_tab=='manage_subjects' else "tertiary"
+        if st.button('Manage Subjects',type=type2,width='stretch',icon =':material/book_ribbon:'):
             st.session_state.current_teacher_tab='manage_subjects'
             st.rerun()
 
     with tab3:
-        if st.button('Attendance Records',width='stretch',icon =':material/cards_stack:'):
+        type3="primary" if st.session_state.current_teacher_tab=='attendance_records' else "tertiary"
+        if st.button('Attendance Records',type=type3,width='stretch',icon =':material/cards_stack:'):
             st.session_state.current_teacher_tab='attendance_records'
             st.rerun()
 
+    if st.session_state.current_teacher_tab=='take_attendance':
+        teacher_tab_take_attendance()
+    if st.session_state.current_teacher_tab=='manage_subjects':
+        teacher_tab_manage_subjects()
+    if st.session_state.current_teacher_tab=='attendance_records':
+        teacher_tab_attendance_records()
+    
+
     footer_dashboard()
+
+def teacher_tab_take_attendance():
+    st.header('Take AI Attendance')
+
+def  teacher_tab_manage_subjects():
+    st.header('Manage Subjects')
+
+def teacher_tab_attendance_records():
+    st.header('Attendance Records')
 
 def login_teacher(username,password):
     if not username or not password:
         return False
 
-    teacher=teacher_login(username,password)
+    teacher = teacher_login(username,password)
 
     if teacher:
-        st.session_state.user_role='teacher'
-        st.session_state.teacher_data='teacher'   
-        st.session_state.is_logged_in='True'      
+        st.session_state.user_role = 'teacher'
+        st.session_state.teacher_data = teacher
+        st.session_state.is_logged_in = True
         return True
 
     return False   
@@ -84,13 +104,13 @@ def teacher_screen_login():
     btnc1,btnc2=st.columns(2)
     with btnc1:
         if st.button('Login',icon=':material/passkey:',shortcut='control+enter',width='stretch'):
-            if teacher_login(teacher_username,teacher_pass):
+            if login_teacher(teacher_username,teacher_pass):
                 st.toast("Welcome Back!",icon='👋')
                 import time
                 time.sleep(1)
                 st.rerun()
-            else:
-                st.error("Invalid Username and Password Combo")
+        else:
+            st.error("Invalid Username and Password Combo")
 
     with btnc2:
         if st.button('Register Instead',icon=':material/passkey:',type='primary',width='stretch'):
